@@ -1,0 +1,36 @@
+services:
+  app:
+    container_name: simple_b2b
+    build:
+      context: .
+      args:
+        APP_PORT: ${APP_PORT}  # This assumes APP_PORT is defined in the .env file
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      NODE_ENV: development
+      APP_PORT: ${APP_PORT}
+      THIRD_PARTY_API_URL: ${THIRD_PARTY_API_URL}
+      AUTH_TOKEN: ${AUTH_TOKEN}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+
+volumes:
+  postgres_data:
